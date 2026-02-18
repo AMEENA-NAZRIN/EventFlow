@@ -2,66 +2,105 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Zap, Menu, X } from "lucide-react";
+import { Zap, Menu, X, LogOut, UserCircle } from "lucide-react";
 import Button from "./Button";
+import { useSession, signOut } from "next-auth/react";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { data: session } = useSession();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-black/60 backdrop-blur-xl border-b border-white/[0.06]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition">
-            <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
+          <Link href="/" className="flex items-center gap-2.5 hover:opacity-80 transition group">
+            <div className="w-8 h-8 bg-gradient-to-br from-neon-cyan to-neon-violet rounded-lg flex items-center justify-center shadow-lg shadow-neon-cyan/20 group-hover:shadow-neon-cyan/40 transition">
               <Zap className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold text-slate-900">EventFlow</span>
+            <span className="text-xl font-bold text-white tracking-wider">
+              EventFlow
+            </span>
           </Link>
 
           {/* Desktop Navigation Links */}
           <div className="hidden md:flex items-center gap-8">
             <Link
               href="/#features"
-              className="text-slate-600 hover:text-slate-900 transition font-medium"
+              className="text-slate-400 hover:text-neon-cyan transition font-medium text-sm tracking-wide uppercase"
             >
               Features
             </Link>
             <Link
               href="/#benefits"
-              className="text-slate-600 hover:text-slate-900 transition font-medium"
+              className="text-slate-400 hover:text-neon-cyan transition font-medium text-sm tracking-wide uppercase"
             >
               Why EventFlow
             </Link>
             <Link
               href="/events"
-              className="text-slate-600 hover:text-slate-900 transition font-medium"
+              className="text-slate-400 hover:text-neon-cyan transition font-medium text-sm tracking-wide uppercase"
             >
               Browse Events
             </Link>
+            <Link
+              href="/verify"
+              className="text-slate-400 hover:text-neon-cyan transition font-medium text-sm tracking-wide uppercase"
+            >
+              Verify Certificate
+            </Link>
+
+
           </div>
 
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center gap-3">
-            <Link href="/login">
-              <Button variant="secondary" className="text-slate-700">
-                Login
-              </Button>
-            </Link>
-            <Link href="/register">
-              <Button variant="primary">Get Started</Button>
-            </Link>
+            {session ? (
+              <>
+                <span className="text-sm font-medium text-slate-400">
+                  {session.user?.name}
+                </span>
+                <Link
+                  href="/profile"
+                  className="p-2 text-slate-400 hover:text-neon-cyan hover:bg-white/5 rounded-lg transition cursor-pointer"
+                  title="View Profile"
+                >
+                  <UserCircle className="w-5 h-5" />
+                </Link>
+                <Button
+                  variant="secondary"
+                  className="text-slate-300 flex items-center gap-2 border-white/10 hover:border-neon-cyan/40 bg-white/5 hover:bg-white/10"
+                  onClick={() => signOut()}
+                >
+                  <LogOut className="w-4 h-4" />
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <>
+                <Link href="/login">
+                  <Button variant="secondary" className="text-slate-300 border-white/10 hover:border-neon-cyan/40 bg-white/5 hover:bg-white/10">
+                    Login
+                  </Button>
+                </Link>
+                <Link href="/register">
+                  <Button variant="primary" className="btn-neon border-0">
+                    Get Started
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
           <button
             onClick={toggleMenu}
-            className="md:hidden p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition"
+            className="md:hidden p-2 text-slate-400 hover:text-neon-cyan hover:bg-white/5 rounded-lg transition"
             aria-label="Toggle menu"
           >
             {isMenuOpen ? (
@@ -74,40 +113,63 @@ export default function Navbar() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden pb-4 pt-2 border-t border-slate-200">
-            <div className="flex flex-col space-y-3">
+          <div className="md:hidden pb-4 pt-2 border-t border-white/[0.06]">
+            <div className="flex flex-col space-y-1">
               <Link
                 href="/#features"
-                className="text-slate-700 hover:text-slate-900 hover:bg-slate-50 px-4 py-2 rounded-lg transition font-medium"
+                className="text-slate-400 hover:text-neon-cyan hover:bg-white/5 px-4 py-2.5 rounded-lg transition font-medium text-sm tracking-wide uppercase"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Features
               </Link>
               <Link
                 href="/#benefits"
-                className="text-slate-700 hover:text-slate-900 hover:bg-slate-50 px-4 py-2 rounded-lg transition font-medium"
+                className="text-slate-400 hover:text-neon-cyan hover:bg-white/5 px-4 py-2.5 rounded-lg transition font-medium text-sm tracking-wide uppercase"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Why EventFlow
               </Link>
               <Link
                 href="/events"
-                className="text-slate-700 hover:text-slate-900 hover:bg-slate-50 px-4 py-2 rounded-lg transition font-medium"
+                className="text-slate-400 hover:text-neon-cyan hover:bg-white/5 px-4 py-2.5 rounded-lg transition font-medium text-sm tracking-wide uppercase"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Browse Events
               </Link>
-              <div className="pt-3 space-y-2">
-                <Link href="/login" className="block">
-                  <Button variant="secondary" className="w-full justify-center">
-                    Login
-                  </Button>
-                </Link>
-                <Link href="/register" className="block">
-                  <Button variant="primary" className="w-full justify-center">
-                    Get Started
-                  </Button>
-                </Link>
+              <div className="pt-3 space-y-2 px-4">
+                {session ? (
+                  <>
+                    <Link
+                      href="/profile"
+                      className="flex items-center gap-2 text-slate-400 hover:text-neon-cyan hover:bg-white/5 px-4 py-2.5 rounded-lg transition font-medium text-sm cursor-pointer"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <UserCircle className="w-4 h-4" />
+                      My Profile
+                    </Link>
+                    <Button
+                      variant="secondary"
+                      className="w-full justify-center text-slate-300 border-white/10 bg-white/5"
+                      onClick={() => signOut()}
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Logout
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Link href="/login" className="block">
+                      <Button variant="secondary" className="w-full justify-center text-slate-300 border-white/10 bg-white/5">
+                        Login
+                      </Button>
+                    </Link>
+                    <Link href="/register" className="block">
+                      <Button variant="primary" className="btn-neon w-full justify-center border-0">
+                        Get Started
+                      </Button>
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -116,3 +178,5 @@ export default function Navbar() {
     </nav>
   );
 }
+
+
